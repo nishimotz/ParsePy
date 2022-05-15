@@ -323,7 +323,7 @@ class File(ParseType, ParseBase):
         self._file_url = url
         self._api_url = '/'.join([API_ROOT, 'files', name])
         self._content = content
-        self._mimetype = mimetype or mimetypes.guess_type(name)
+        self._mimetype = mimetype or mimetypes.guess_type(name)[0]
         if not content and not url:
             with open(name) as f:
                 content = f.read()
