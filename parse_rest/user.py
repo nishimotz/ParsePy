@@ -70,6 +70,25 @@ class User(ParseResource):
         else:
             call_back(response)
 
+    def save_with_master_key(self, master_key, batch=False):
+        PROTECTED_ATTRIBUTES_ORG = self.__class__.PROTECTED_ATTRIBUTES
+        if 'username' in self.__class__.PROTECTED_ATTRIBUTES:
+            self.__class__.PROTECTED_ATTRIBUTES.remove('username')
+        session_header = {'X-Parse-Master-Key': master_key}
+        url = self._absolute_url
+        data = self._to_native()
+        self.__class__.PROTECTED_ATTRIBUTES = PROTECTED_ATTRIBUTES_ORG
+
+        response = User.PUT(url, extra_headers=session_header, batch=batch, **data)
+
+        def call_back(response_dict):
+            self.updatedAt = response_dict['updatedAt']
+
+        if batch:
+            return response, call_back
+        else:
+            call_back(response)
+
     @login_required
     def delete(self):
         session_header = {'X-Parse-Session-Token': self.sessionToken}
