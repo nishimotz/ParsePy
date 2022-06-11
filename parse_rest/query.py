@@ -65,7 +65,7 @@ class QueryManager(object):
 class Queryset(object):
 
     OPERATORS = [
-        'lt', 'lte', 'gt', 'gte', 'ne', 'in', 'nin', 'exists', 'select', 'dontSelect', 'all', 'regex', 'relatedTo', 'nearSphere'
+        'lt', 'lte', 'gt', 'gte', 'ne', 'in', 'nin', 'exists', 'select', 'dontSelect', 'all', 'regex', 'relatedTo', 'nearSphere', 'text'
     ]
 
     @staticmethod
@@ -140,7 +140,10 @@ class Queryset(object):
             else:
                 if not isinstance(q._where[attr], dict):
                     q._where[attr] = {}
-                q._where[attr]['$' + operator] = parse_value
+                if operator == 'text':
+                    q._where[attr]['$' + operator] = {'$search': {'$term': parse_value}}
+                else:
+                    q._where[attr]['$' + operator] = parse_value
         return q
 
     def limit(self, value):
