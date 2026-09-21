@@ -10,12 +10,10 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from __future__ import unicode_literals
 
 import base64
 import datetime
 import mimetypes
-import six
 
 from parse_rest.connection import API_ROOT, ParseBase
 from parse_rest.query import QueryManager
@@ -70,7 +68,7 @@ class ParseType(object):
         }
 
         if (hasattr(python_object, '__iter__') and
-            not isinstance(python_object, (six.string_types[0], ParseType))):
+            not isinstance(python_object, (str, ParseType))):
             # It's an iterable? Repeat this whole process on each object
             if isinstance(python_object, dict):
                 for key, value in python_object.items():
@@ -251,7 +249,7 @@ class Date(ParseType):
         """Can be initialized either with a string or a datetime"""
         if isinstance(date, datetime.datetime):
             self._date = date
-        elif isinstance(date, six.string_types):
+        elif isinstance(date, str):
             self._date = Date._from_str(date)
 
     def _to_native(self):
@@ -454,7 +452,7 @@ class ParseResource(ParseBase):
         return object.__getattribute__(self, attr) #preserve default if attr not exists
 
     def _init_attrs(self, args):
-        for key, value in six.iteritems(args):
+        for key, value in args.items():
             # https://github.com/milesrichardson/ParsePy/issues/155
             try:
                 setattr(self, key, ParseType.convert_from_parse(key, value))
@@ -538,7 +536,7 @@ class ObjectMetaclass(type):
         return cls
 
 
-class Object(six.with_metaclass(ObjectMetaclass, ParseResource)):
+class Object(ParseResource, metaclass=ObjectMetaclass):
     ENDPOINT_ROOT = '/'.join([API_ROOT, 'classes'])
 
     @classmethod

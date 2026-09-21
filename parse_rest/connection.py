@@ -11,10 +11,9 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from six.moves.urllib.request import Request, urlopen
-from six.moves.urllib.error import HTTPError
-from six.moves.urllib.parse import urlencode, urlparse
-from six import PY2
+from urllib.request import Request, urlopen
+from urllib.error import HTTPError
+from urllib.parse import urlencode, urlparse
 
 import json
 
@@ -125,10 +124,7 @@ class ParseBase(object):
         }
         headers.update(extra_headers or {})
 
-        if PY2 and cls.__name__ == 'File':
-            request = Request(url.encode('utf-8'), data, headers)
-        else:
-            request = Request(url, data, headers)
+        request = Request(url, data, headers)
 
         if ACCESS_KEYS.get('session_token'):
             request.add_header('X-Parse-Session-Token', ACCESS_KEYS.get('session_token'))

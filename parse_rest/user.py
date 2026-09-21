@@ -14,7 +14,7 @@
 
 from parse_rest.core import ResourceRequestLoginRequired, ParseError
 from parse_rest.connection import API_ROOT
-from parse_rest.datatypes import ParseResource, ParseType
+from parse_rest.datatypes import ParseResource, ParseType, Relation
 from parse_rest.query import QueryManager
 
 

@@ -4,14 +4,12 @@
 """
 Contains unit tests for the Python Parse REST API wrapper
 """
-from __future__ import print_function
 
 import os
 import sys
 import subprocess
 import unittest
 import datetime
-import six
 from itertools import chain
 
 from parse_rest.core import ResourceRequestNotFound
